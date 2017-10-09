@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Title</title>
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script src="node_modules/vue-resource/dist/vue-resource.js"></script>
+</head>
+
+<body>
+  <div id="app" class="container">
+    <h1>vue-resource插件请求讲解</h1>
+    <a href="javascript:;" class="btn btn-primary" v-on:click="get">Get请求</a>
+    <a href="javascript:;" class="btn btn-primary" v-on:click="post">Post请求</a>
+    <a href="javascript:;" class="btn btn-primary" v-on:click="jsonp">JSONP请求</a>
+    <a href="javascript:;" class="btn btn-primary" v-on:click="http">http配置参数请求</a>
+
+    <div>
+      <span>{{msg}}</span>
+    </div>
+  </div>
+  <script>
+    new Vue ({
+      el:"#app",
+      data:{
+        msg:""
+      },
+      mounted:function () {
+//        全局拦截器处理。可以拦截请求前和请求后的事件。可用在请求前加loding HUD
+        Vue.http.interceptors.push(function (request,next) {
+          console.log("request init");
+          next(function (respose) {
+            console.log("respose init");
+            return respose;
+          });
+
+        });
+      },
+      http:{
+//        root:"这里面可以放主域名头地址"
+      },
+      methods:{
+        get:function () {
+          this.$http.get("package.json",{
+            params:{
+              userId:"101"
+            },
+            headers:{
+              token:"abcd"
+            }
+          }).then(res=>{
+            this.msg = res.data;
+          },error=>{
+            this.msg = error;s
+          });
+        },
+        post:function () {
+          this.$http.post("package.json",{
+            userId:"102"
+          },{
+            headers:{
+              access_token:"abd"
+            }
+          }).then(res=>{
+            this.msg = res.data;
+          },error=>{
+            this.msg = error;
+          })
+        },
+        jsonp:function () {
+          this.$http.jsonp("http://www.imooc.com/course/AjaxCourseMembers?ids=796").then(res=>{
+            this.msg = res.data;
+          })
+        },
+        http:function () {
+          this.$http({
+            url:"package.json",
+            method:"GET",
+            params:{
+              userId:"103"
+            },
+            headers:{
+              token:"abc123"
+            },
+            timeout:50,
+            before:function () {
+              console.log("before init")
+            }
+          }).then(function (res) {
+            this.msg = res.data;
+          });
+        }
+      }
+    });
+  </script>
+</body>
+</html>

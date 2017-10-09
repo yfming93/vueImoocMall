@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Title</title>
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script src="node_modules/axios/dist/axios.js"></script>
+</head>
+
+<body>
+<div id="app" class="container">
+  <h1>axios插件请求讲解</h1>
+  <a href="javascript:;" class="btn btn-primary" v-on:click="get">Get请求</a>
+  <a href="javascript:;" class="btn btn-primary" v-on:click="post">Post请求</a>
+  <a href="javascript:;" class="btn btn-primary" v-on:click="http">http配置参数请求</a>
+
+  <div>
+    <span>{{msg}}</span>
+  </div>
+</div>
+<script>
+  new Vue ({
+    el:"#app",
+    data:{
+      msg:""
+    },
+    mounted:function () {
+      //全局拦截器：
+      //请求前拦截
+      axios.interceptors.request.use(function (config) {
+        console.log("可以在这里写加载HUD");
+        return config;
+      })
+      // 请求后拦截
+      axios.interceptors.response.use(function (response) {
+        console.log("response init ");
+        return response;
+      })
+    },
+    methods:{
+      get:function () {
+        axios.get("package.json",{
+          params:{
+            userId:"999"
+          },
+          headers:{
+            token:"Jack"
+          }
+        }).then(res=>{
+          this.msg = res.data;
+        }).catch(error=>{
+          console.log("error init"+error)
+        });
+      },
+      post:function () {
+        axios.post("package.json",{
+          userId:"666"
+        },{
+          headers:{
+            token:"www.yfming.cn"
+          }
+        }).then(res=>{
+          this.msg = res.data;
+        }).catch(error=>{
+          console.log("error init"+error)
+        });
+      },
+      http:function () {
+        axios({
+          url:"package.json",
+          method:"POST",
+          data:{
+            userId:"111"
+          },
+//          // 注意： POST请求时参数在data里面定义；GET请求时参数要在 params 中定义
+//          params:{
+//            userId:"222"
+//          },
+          headers:{
+            token:"eeeee"
+          }
+        }).then(res=>{
+          this.msg = res.data;
+        })
+      }
+    }
+  });
+</script>
+</body>
+</html>

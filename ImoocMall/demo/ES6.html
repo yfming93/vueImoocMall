@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6Demo演示</title>
+  <style>
+    .log {
+      background-color: black;
+      color: white;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>ES6Demo演示</h2>
+  <div id="log" class="log"></div>
+
+  <script>
+    //模板语言
+    var str = `
+    console.log("a"+a);
+    var a = 1;
+    console.log("b"+b);
+    let b = 2;
+    ------------------
+    function user() {
+      var a = 1;
+    }
+    console.log("a"+a);
+    var a = 1;
+    -------------------
+    //块级作用域
+    {
+      let a = 1;
+      var b = 2;
+    }
+
+    console.log("b:"+b);
+    console.log("a:"+a); //errorr
+    ---------------------
+     let a  = 1;
+    a = 2;
+    const  b = 2 ;
+//    b  = 3;  //error ES6.html?_ijt=f1b25lpo249eskl9mi7gbhji:46 Uncaught TypeError: Assignment to constant variable.
+    ------------------------
+    const  c = {d:1};
+    c.d = 2;
+    c.e = 3;
+//    c = {f:1}; // error
+    -------------
+    // 模板语言  可以直接拼接 字符串和变量
+//    let  userName = "Jack";
+//    printLog(\`I'm $删除这5字{userName}\`);  //中文是分割作用看时自己删除
+    --------------
+    function es5(flag) {
+      if (flag) {
+        return " es5 true";
+      }else {
+        return "es5 error";
+      }
+    }
+    console.log(es5());
+    // ES6默认参数  开发中可以进行容错处理
+    function es6(num1, num2 =4) {
+      return num1 + num2;
+    }
+    console.log(es6(7)); //结果11 即使少传了一个参数也不会报错
+    ---------------------------------
+    //箭头函数演示
+    var  arr = [3, 6, 9];
+    //遍历数组 以前写法
+    var  newArr = arr.map(function (item) {
+      return item + 2;
+    })
+    console.log(newArr);
+
+    // ES6箭头函数 遍历数组  当表达式只有一行时可以 直接=>接表达式。否则要用{}包着
+    var  newArr1 = arr.map((item)=>item+2);
+    console.log("newArr1:"+ newArr1);
+
+    `;
+    printLog(str);
+    //数组的解构
+    var [a,b,c] = [3,8,10]; //数组的分解
+
+    var [x,y,z] = "Vue";  //字符串的分解
+    console.log(`x:${x},y:${y},z:${z}`);
+
+    var {m,n} = {m:3,n:4};  //对象的解构，对key进行拆分 (m和n的顺序不同也可以)
+    console.log(`m:${m},n:${n}`);
+
+    //函数解构
+    function sum([x,y]) {
+      return x + y;
+    }
+
+    var  total = sum([2,8]);
+    console.log(`total:${total}`);
+
+    function printLog(str) {
+      document.getElementById("log").innerText = str;
+    }
+  </script>
+
+</body>
+</html>

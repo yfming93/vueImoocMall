@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6-2Demo演示</title>
+
+</head>
+<body>
+  <h2>ES6-2Demo演示</h2>
+  <script>
+    function sum(x,y,z) {
+      let total = 0;
+      if (x) total += x;
+      if (y) total += y;
+      if (z) total += z;
+      console.log(`total:${total}`);
+    }
+    sum(2,"",8);
+
+    function sum2(...m) { //动态参数三个点
+      let total2 = 0;
+      for (var i of m) {
+        total2 += i;
+      }
+      console.log(`total2:${total2}`);  //total2:12
+    }
+    sum2(2,2,4,4);
+
+    //ES6写法
+    let  sum3 = (...m)=>{
+      let total2 = 0;
+      for (var i of m) {
+        total2 += i;
+      }
+      console.log(`total3:${total2}`); //total3:12
+    };
+    sum3(2,2,4,4);
+
+    //数组扩展
+    var [x,y] = [4,8];
+    console.log(...[4,7]); //4 7
+
+    var arr1 = [1,3]; var arr2 = [4,5];
+    console.log("concat:"+arr1.concat(arr2)); //concat:1,3,4,5
+    console.log("concat2:"+[...arr1,...arr2]); //concat2:1,3,4,5
+
+    var [e,...f] = [2,3,4,5];
+    console.log("f:"+f); //f:3,4,5
+
+    let [a,b,c] = "ES6";
+    console.log(`a:${a},b:${b},c:${c}`); //a:E,b:S,c:6
+
+    let xy = [..."ES6"];
+    console.log(`xy:${xy}`);//xy:E,S,6
+
+
+  </script>
+
+
+</body>
+</html>
