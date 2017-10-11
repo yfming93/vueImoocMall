@@ -1,0 +1,30 @@
+{
+  "status":"0",
+  "msg":"",
+  "result":[
+    {
+      "productId":"10001",
+      "productName":"yfmingo",
+      "productPrice":"2499",
+      "productImg":"1.jpg"
+    },
+    {
+      "productId":"10002",
+      "productName":"yyy",
+      "productPrice":"299",
+      "productImg":"2.jpg"
+    },
+    {
+      "productId":"10003",
+      "productName":"yfm",
+      "productPrice":"249",
+      "productImg":"3.jpg"
+    },
+    {
+      "productId":"10004",
+      "productName":"袁凤鸣",
+      "productPrice":"9",
+      "productImg":"4.jpg"
+    }
+  ]
+}
