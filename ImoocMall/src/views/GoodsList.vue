@@ -10,16 +10,16 @@
           <span class="sortby">Sort by:</span>
           <a href="javascript:void(0)" class="default cur">Default</a>
           <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
-          <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
+          <a href="javascript:void(0)" class="filterby stopPop" v-on:click="showFilerPop">Filter by</a>
         </div>
         <div class="accessory-result">
           <!-- filter -->
-          <div class="filter stopPop" id="filter">
+          <div class="filter stopPop" id="filter" v-lazy="{'filterby-show':filerBy}">
             <dl class="filter-price">
               <dt>Price:</dt>
-              <dd><a href="javascript:void(0)">All</a></dd>
+              <dd><a href="javascript:void(0)" :class="{'cur':priceCheck=='all'}" @click="setPriceCheck('all')">All</a></dd>
               <dd v-for="(price,index) in priceFilter">
-                <a href="javascript:void(0)">{{price.startPrice}} - {{price.endPrice}}</a>
+                <a href="javascript:void(0)" @click="setPriceCheck(index)" :class="{'cur':priceCheck == index}">{{price.startPrice}} - {{price.endPrice}}</a>
               </dd>
 
             </dl>
@@ -48,6 +48,7 @@
         </div>
       </div>
     </div>
+    <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
     <nav-footer></nav-footer>
 	</div>
 </template>
@@ -81,7 +82,11 @@
             startPrice:'1000.00',
             endPrice:'2000.00'
           },
-        ]
+        ],
+        priceCheck:'all',   //价格选中的状态
+        filerBy:false,      //小屏幕价格菜单显示
+        overLayFlag:false   //遮罩显示
+
 			}
 		},
     components:{
@@ -98,6 +103,19 @@
               var  res = result.data;
               this.goodslist = res.result;
             })
+        },
+        showFilerPop() {
+           this.filerBy = true;
+           this.overLayFlag = true;
+
+        },
+        closePop(){
+          this.filerBy = false;
+          this.overLayFlag = false;
+        },
+        setPriceCheck(index){
+           this.priceCheck = index;
+           this.closePop();
         }
     }
 	}
