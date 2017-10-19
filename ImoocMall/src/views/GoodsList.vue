@@ -31,7 +31,7 @@
               <ul>
                 <li v-for="(item,index) in goodslist">
                   <div class="pic">
-                    <a href="#"><img v-bind:src="'static/' + item.productImg" alt=""></a>
+                    <a href="#"><img v-bind:src="'static/' + item.productImage" alt=""></a>
                   </div>
                   <div class="main">
                     <div class="name">{{item.productName}}</div>
@@ -101,7 +101,7 @@
         getGoodsList:function () {
             axios.get("/goods").then((result)=>{
               var  res = result.data;
-              this.goodslist = res.result;
+              this.goodslist = res.result.list;
             })
         },
         showFilerPop() {
