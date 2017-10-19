@@ -42,8 +42,9 @@
                   </div>
                 </li>
               </ul>
-              <div class="load-more" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
-                加载中...
+              <!--// 利用 busy 控制隐藏加载HUD-->
+              <div v-show="!busy" class="load-more" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+                <img src="static/loading-svg/loading-bubbles.svg" alt="">
               </div>
             </div>
           </div>
@@ -80,16 +81,19 @@
         priceFilter:[
           {
             startPrice:'0.00',
+            endPrice:'100.00'
+          },
+          {
+            startPrice:'100.00',
             endPrice:'500.00'
           },
           {
             startPrice:'500.00',
             endPrice:'1000.00'
-          },
-          {
+          }, {
             startPrice:'1000.00',
-            endPrice:'2000.00'
-          },
+            endPrice:'5000.00'
+          }
         ],
         priceCheck:'all',   //价格选中的状态
         filerBy:false,      //小屏幕价格菜单显示
@@ -97,6 +101,7 @@
         page:1,
         pageSize:8,
         busy:true       //默认禁止滚动加载
+
 			}
 		},
     components:{
@@ -112,8 +117,8 @@
           var param = {
             page:this.page,
             pageSize:this.pageSize,
-            sort:this.sortFlag?1:-1
-//            priceLevel:this.priceChecked
+            sort:this.sortFlag?1:-1,   //升降排序
+            priceLevel:this.priceCheck //价格级别
           };
 
           axios.get("/goods",{
@@ -151,6 +156,8 @@
         setPriceCheck(index){
            this.priceCheck = index;
            this.closePop();
+           this.page = 1;
+           this.getGoodsList();
         },
         sortGoods (){ //排序
           this.sortFlag = !this.sortFlag;
