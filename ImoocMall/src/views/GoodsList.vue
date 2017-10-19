@@ -9,7 +9,7 @@
         <div class="filter-nav">
           <span class="sortby">Sort by:</span>
           <a href="javascript:void(0)" class="default cur">Default</a>
-          <a href="javascript:void(0)" class="price">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+          <a href="javascript:void(0)" class="price" @click="sortGoods">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
           <a href="javascript:void(0)" class="filterby stopPop" v-on:click="showFilerPop">Filter by</a>
         </div>
         <div class="accessory-result">
@@ -35,14 +35,16 @@
                   </div>
                   <div class="main">
                     <div class="name">{{item.productName}}</div>
-                    <div class="price">{{item.productPrice}}</div>
+                    <div class="price">{{item.salePrice}}</div>
                     <div class="btn-area">
                       <a href="javascript:;" class="btn btn--m">加入购物车</a>
                     </div>
                   </div>
                 </li>
-
               </ul>
+              <div class="load-more" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+                加载中...
+              </div>
             </div>
           </div>
         </div>
@@ -54,6 +56,11 @@
 </template>
 
 <style >
+.load-more {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
 </style>
 
 <script >
@@ -69,6 +76,7 @@
 		data (){
 			return {
 				goodslist:[],
+        sortFlag:true, //排序
         priceFilter:[
           {
             startPrice:'0.00',
@@ -85,8 +93,10 @@
         ],
         priceCheck:'all',   //价格选中的状态
         filerBy:false,      //小屏幕价格菜单显示
-        overLayFlag:false   //遮罩显示
-
+        overLayFlag:false,   //遮罩显示
+        page:1,
+        pageSize:8,
+        busy:true       //默认禁止滚动加载
 			}
 		},
     components:{
@@ -95,14 +105,39 @@
       NavBread
     },
     mounted:function () {
-        this.getGoodsList();
+        this.getGoodsList(false);
     },
     methods:{
-        getGoodsList:function () {
-            axios.get("/goods").then((result)=>{
-              var  res = result.data;
-              this.goodslist = res.result.list;
-            })
+        getGoodsList:function (flag) {
+          var param = {
+            page:this.page,
+            pageSize:this.pageSize,
+            sort:this.sortFlag?1:-1
+//            priceLevel:this.priceChecked
+          };
+
+          axios.get("/goods",{
+            params:param
+          }).then((result)=>{
+            var  res = result.data;
+            if (res.status=="0") {
+              if (flag) { //累加
+                this.goodslist = this.goodslist.concat(res.result.list);
+                if (res.result.count==0) {
+                  this.busy = true; //没数据时禁止滚动到底部自动请求
+                }else {
+                  this.busy = false;
+                }
+              }else { //不累加
+                this.goodslist = res.result.list;
+                this.busy = false; //首次请求成功后开启
+
+              }
+            }else {
+              this.goodslist = [];
+            };
+
+          })
         },
         showFilerPop() {
            this.filerBy = true;
@@ -116,6 +151,19 @@
         setPriceCheck(index){
            this.priceCheck = index;
            this.closePop();
+        },
+        sortGoods (){ //排序
+          this.sortFlag = !this.sortFlag;
+          this.page = 1;
+          this.getGoodsList();
+        },
+        loadMore () {
+          this.bus = true;
+          //第一请求完成后才会执行第二个请求，防止鼠标滚动时请求过多
+          setTimeout(()=>{
+            this.page++;
+            this.getGoodsList(true); //传个true表示要列表数组累加
+          },500)
         }
     }
 	}
