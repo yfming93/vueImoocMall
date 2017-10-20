@@ -113,7 +113,7 @@
         this.getGoodsList(false);
     },
     methods:{
-        getGoodsList:function (flag) {
+        getGoodsList:function (flag) {    //获取商品列表
           var param = {
             page:this.page,
             pageSize:this.pageSize,
@@ -121,7 +121,7 @@
             priceLevel:this.priceCheck //价格级别
           };
 
-          axios.get("/goods",{
+          axios.get("/goods/list",{
             params:param
           }).then((result)=>{
             var  res = result.data;
@@ -183,7 +183,7 @@
               alert("加入购物车成功");
             }else{
 //              this.mdShow = true;
-              alert("加入购物车失败");
+              alert(res.msg);
             }
           });
         }

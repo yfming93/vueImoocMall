@@ -158,9 +158,20 @@
       return this.$store.state.cartCount;
     }*/
     mounted(){
-//      this.checkLogin();
+      this.checkLogin();
     },
     methods:{
+      checkLogin(){
+        axios.get("/users/checkLogin").then((response)=>{
+          var res = response.data;
+//          var path = this.$route.pathname;
+          if(res.status=="0"){
+            this.nickName = res.result;
+//            this.$store.commit("updateUserInfo",res.result);
+//            this.loginModalFlag = false;
+          }
+        });
+      },
       login(){
         if(!this.userName || !this.userPwd){  //没输入提示错误信息
           this.errorTip = true;
