@@ -94,7 +94,7 @@
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
-                    <a href="javascript:;" class="item-edit-btn">
+                    <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item.productId)">
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del"></use>
                       </svg>
@@ -129,6 +129,15 @@
         </div>
       </div>
     </div>
+    <Modal :mdShow="modalCofirm" @close="closeModal">
+      <p slot="message" >
+        你确定要删除此条数据吗？
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="delCart">确认</a>
+        <a class="btn btn--m" href="javascript:;" @click="modalCofirm = false">关闭</a>
+      </div>
+    </Modal>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -168,15 +177,16 @@
 
   export default{
     data(){
-      return{
-        cartList:[]  //购物车列表
-
+      return {
+        cartList: [],  //购物车列表
+        modalCofirm: false, //删除提示的模态框是否隐藏
+        productId: '' //记录将要删除的产品ID
       }
     },
     mounted(){
-      this.init();
+        this.init();
     },
-    components:{
+    components: {
       NavHeader,
       NavFooter,
       NavBread,
@@ -189,7 +199,28 @@
           this.cartList = res.result;
 
         });
+      },
+      closeModal () {   //关闭模态框
+        this.modalCofirm = false;
+      },
+      delCartConfirm (productId){   //点击删除弹框的方法
+        this.modalCofirm = true; //显示删除模态框
+        this.productId = productId;
+      },
+      delCart(){    //删除商品
+        axios.post("/users/cartDel",{
+          productId:this.productId
+        }).then((response)=>{
+          let res = response.data;
+          if(res.status == '0'){
+            this.modalCofirm = false;
+            // var delCount = this.delItem.productNum;
+            // this.$store.commit("updateCartCount",-delCount);
+            this.init();
+          }
+        });
       }
+
     }
   }
 </script>
