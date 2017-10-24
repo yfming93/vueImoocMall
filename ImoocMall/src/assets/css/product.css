@@ -478,6 +478,7 @@
 .icon-arrow-short {
   width: 11px;
   height: 11px;
+  transition: all 0.3s ease-out;
 }
 
 .page-title-accessory {
